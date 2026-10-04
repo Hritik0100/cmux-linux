@@ -1,0 +1,25 @@
+[package]
+name = "cmuxp-app"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "cmuxp"
+path = "src/main.rs"
+
+[features]
+default = ["browser"]
+# In-app browser tabs. Needs libwebkitgtk-6.0-dev; build without it via --no-default-features.
+browser = ["dep:webkit6"]
+
+[dependencies]
+cmuxp-proto.workspace = true
+serde_json.workspace = true
+gtk = { package = "gtk4", version = "0.11", features = ["v4_12"] }
+vte = { package = "vte4", version = "0.10", features = ["v0_76"] }
+webkit6 = { version = "0.6", optional = true }
+async-channel = "2"
+libc = "0.2"
+nix = { version = "0.29", features = ["sched", "term", "net", "process", "uio"] }
+serde.workspace = true
+toml = "1"

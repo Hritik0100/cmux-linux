@@ -1,0 +1,27 @@
+# AppArmor profile for cmuxp.
+#
+# On Ubuntu 23.10+ (default from 24.04) the kernel has
+# kernel.apparmor_restrict_unprivileged_userns=1. When an *unconfined* process
+# creates a user namespace, AppArmor moves it into the built-in
+# `unprivileged_userns` profile, which has `audit deny capability` — so
+# CAP_SYS_ADMIN / CAP_NET_ADMIN are denied. cmuxp needs CAP_NET_ADMIN to bring
+# `lo` up inside each workspace's network namespace, so without this profile the
+# sandbox silently fails ("SIOCSIFFLAGS: Operation not permitted").
+#
+# Running cmuxp under this named, unconfined-status profile skips that
+# transition, restoring the capability the sandbox needs. It restricts nothing
+# (it only allows the user-namespace feature cmuxp already uses).
+#
+# Install (once, needs root):
+#   sudo install -Dm644 data/cmuxp.apparmor /etc/apparmor.d/cmuxp
+#   sudo apparmor_parser -r /etc/apparmor.d/cmuxp
+# Uninstall:
+#   sudo apparmor_parser -R /etc/apparmor.d/cmuxp && sudo rm /etc/apparmor.d/cmuxp
+abi <abi/4.0>,
+include <tunables/global>
+
+# `/**/cmuxp` covers both ~/.local/bin/cmuxp and a repo's target/{debug,release}/cmuxp.
+profile cmuxp /**/cmuxp flags=(unconfined) {
+  userns,
+  include if exists <local/cmuxp>
+}

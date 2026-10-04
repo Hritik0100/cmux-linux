@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=cmuxp
+Comment=Terminal for running coding agents side by side
+Exec=cmuxp
+Icon=dev.cmuxp.App
+Terminal=false
+Categories=System;TerminalEmulator;
+StartupWMClass=dev.cmuxp.App

@@ -1,0 +1,13 @@
+[package]
+name = "cmuxp-ctl"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "cmuxpctl"
+path = "src/main.rs"
+
+[dependencies]
+cmuxp-proto.workspace = true
+serde_json.workspace = true
+clap = { version = "4", features = ["derive", "env"] }
